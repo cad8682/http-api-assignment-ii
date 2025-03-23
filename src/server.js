@@ -22,16 +22,13 @@ const parseBody = (request, response, handler) => {
     request.on('end', () => {
       const bodyString = Buffer.concat(body).toString();
       request.body = query.parse(bodyString);
-      //handler(request, response);
+      handler(request, response);
     });
   };
  
   // handle POST requests
   const handlePost = (request, response, parsedUrl) => {
-    // If they go to /addUser
     if (parsedUrl.pathname === '/addUser') {
-      // Call our below parseBody handler, and in turn pass in the
-      // jsonHandler.addUser function as the handler callback function.
       parseBody(request, response, jsonHandler.addUser);
     }
   };
@@ -43,6 +40,12 @@ const parseBody = (request, response, handler) => {
     }
     else if (parsedUrl.pathname === '/') {
       htmlHandler.getIndex(request, response);
+    }
+    else if (parsedUrl.pathname === '/getUsers') {
+      parseBody(request, response, jsonHandler.getUsers);
+    }
+    else {
+      parseBody(request, response, jsonHandler.notFound);
     }
   };
 
